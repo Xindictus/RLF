@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -12,17 +13,34 @@ import (
 
 type params struct {
     TypeOfReport	string  `json:"reportType"`
-	DateTime		string	`json:datetime`
+	RequestId		string	`json:"requestId"`
+	DateTime		string	`json:"datetime"`
+}
+
+type  detail struct {
+    Detail	string  `json:"detail"`
 }
 
 func getLogs(c *gin.Context) {
 	report_type := c.DefaultQuery("reportType", "all") // shortcut for c.Request.URL.Query().Get("reportType")
+	request_id	:= c.DefaultQuery("requestId", "")
 	datetime := c.DefaultQuery("datetime", time.Now().String())
+
+	detail := detail {
+		Detail: "Request Id is missing, please include a requestId",
+	}
+	if request_id == "" {
+		fmt.Printf("Mpika")
+		c.IndentedJSON(http.StatusBadRequest, detail)
+		return
+	}
 
 	p := params {
 		TypeOfReport: report_type,
+		RequestId: request_id,
 		DateTime: datetime,
 	}
+	fmt.Printf("kai Vgika")
 
 	// TODO Function that searches for the file based on the previosu parameters
 	// targetPath := filepath.Join(LOG_FILES_PATH, filename)
