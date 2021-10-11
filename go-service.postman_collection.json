@@ -1,0 +1,57 @@
+{
+	"info": {
+		"_postman_id": "445f1acc-8a3f-495d-a67e-ac3869220ed8",
+		"name": "go-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "New Request",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "firstname",
+							"value": "Ioannis",
+							"type": "text"
+						},
+						{
+							"key": "lastname",
+							"value": "Katsikavelas",
+							"type": "text"
+						},
+						{
+							"key": "Guest",
+							"value": "test",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/logs?reportType=sdasd",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"logs"
+					],
+					"query": [
+						{
+							"key": "reportType",
+							"value": "sdasd"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
