@@ -97,5 +97,5 @@ func main() {
 	router := gin.Default()
 	router.GET("/logs", getLogs)
 
-	router.Run("localhost:8080")
+	router.Run(":8080")
 }
