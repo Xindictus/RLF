@@ -8,36 +8,39 @@ import (
 	"path/filepath"
 	"strings"
 
+	conf "rlf.com/conf"
+
 	"github.com/gin-gonic/gin"
 )
 
+// let's get to hacking your nice path
 const LOG_FILES_PATH = "/home/ioannis/Desktop/"
 
-type  detail struct {
-    Detail	string  `json:"detail"`
+type detail struct {
+	Detail string `json:"detail"`
 }
 
 // recursively walk through a directory and return the paths to all files whose name matches the given pattern
 func WalkMatch(root, pattern string) ([]string, error) {
-    var matches []string
-    err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-        if err != nil {
-            return err
-        }
-        if info.IsDir() {
-            return nil
-        }
-        if matched, err := filepath.Match(pattern, filepath.Base(path)); err != nil {
-            return err
-        } else if matched {
-            matches = append(matches, path)
-        }
-        return nil
-    })
-    if err != nil {
-        return nil, err
-    }
-    return matches, nil
+	var matches []string
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
+		if matched, err := filepath.Match(pattern, filepath.Base(path)); err != nil {
+			return err
+		} else if matched {
+			matches = append(matches, path)
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return matches, nil
 }
 
 func searchFile(request_id string, filepath string) bool {
@@ -55,11 +58,11 @@ func searchFile(request_id string, filepath string) bool {
 
 func getLogs(c *gin.Context) {
 	// report_type := c.DefaultQuery("reportType", "all") // shortcut for c.Request.URL.Query().Get("reportType")
-	request_id	:= c.DefaultQuery("requestId", "")
+	request_id := c.DefaultQuery("requestId", "")
 	// datetime := c.DefaultQuery("datetime", time.Now().String())
 
 	if request_id == "" {
-		detail := detail {
+		detail := detail{
 			Detail: "Request Id is missing, please include a requestId",
 		}
 		c.IndentedJSON(http.StatusBadRequest, detail)
@@ -85,17 +88,18 @@ func getLogs(c *gin.Context) {
 	// 	RequestId: request_id,
 	// 	DateTime: datetime,
 	// }
-	detail := detail {
+	detail := detail{
 		// Detail: "Unfortunatelly no log files found with this specific requestId",
 		Detail: "Unfortunatelly no log files found with this specific requestId: " + request_id,
 	}
 	c.IndentedJSON(http.StatusNotFound, detail)
 }
 
-
 func main() {
 	router := gin.Default()
+	ip, port := conf.GetAPIConf()
+
 	router.GET("/logs", getLogs)
 
-	router.Run(":8080")
+	router.Run(fmt.Sprintf("%s:%d", ip, port))
 }
