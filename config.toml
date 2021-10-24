@@ -1,0 +1,17 @@
+[API]
+
+    [API.DEV]
+    IP = ""
+    Port = 8080
+
+    [API.PROD]
+    IP = ""
+    Port = 8080
+
+[Logs]
+
+    [Logs.DEV]
+    path = "/logs"
+
+    [Logs.PROD]
+    path = "/logs"
