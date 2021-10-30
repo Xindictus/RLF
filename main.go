@@ -43,7 +43,7 @@ func main() {
 	{
 		log := v1.Group("/logs")
 		{
-			log.GET(":id", c.GetLogs)
+			log.GET("", c.GetLogs)
 		}
 	}
 

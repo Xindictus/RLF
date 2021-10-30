@@ -32,9 +32,9 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/logs/{requestId}": {
+        "/logs": {
             "get": {
-                "description": "get string by ID",
+                "description": "Search for log file by request_id",
                 "consumes": [
                     "application/json"
                 ],
@@ -44,7 +44,7 @@ var doc = `{
                 "tags": [
                     "accounts"
                 ],
-                "summary": "Show an account",
+                "summary": "Search for log file",
                 "parameters": [
                     {
                         "type": "string",

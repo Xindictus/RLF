@@ -54,9 +54,9 @@ func searchFile(request_id string, filepath string) bool {
 	return request_id_exists
 }
 
-// ShowAccount godoc
-// @Summary Show an account
-// @Description get string by ID
+// Search for log file godoc
+// @Summary Search for log file
+// @Description Search for log file by request_id
 // @Tags accounts
 // @Accept  json
 // @Produce  json
@@ -64,11 +64,10 @@ func searchFile(request_id string, filepath string) bool {
 // @Failure 400 {object} httputil.HTTPError
 // @Failure 404 {object} httputil.HTTPError
 // @Failure 500 {object} httputil.HTTPError
-// @Router /logs/{requestId} [get]
+// @Router /logs [get]
 func (c *Controller) GetLogs(ctx *gin.Context)  {
 	// report_type := c.DefaultQuery("reportType", "all") // shortcut for c.Request.URL.Query().Get("reportType")
 	request_id := ctx.DefaultQuery("requestId", "")
-
 	if request_id == "" {
 		detail := detail{
 			Detail: "Request Id is missing, please include a requestId",

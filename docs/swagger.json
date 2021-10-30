@@ -18,9 +18,9 @@
     "host": "localhost:8080",
     "basePath": "/api/v1",
     "paths": {
-        "/logs/{requestId}": {
+        "/logs": {
             "get": {
-                "description": "get string by ID",
+                "description": "Search for log file by request_id",
                 "consumes": [
                     "application/json"
                 ],
@@ -30,7 +30,7 @@
                 "tags": [
                     "accounts"
                 ],
-                "summary": "Show an account",
+                "summary": "Search for log file",
                 "parameters": [
                     {
                         "type": "string",
