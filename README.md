@@ -1,4 +1,5 @@
 # RLF
+
 RLF (Retrieve Log Files)
 
 Welcome to RLF! 🧑‍🚀
@@ -15,3 +16,11 @@ Endpoint | HTTP Method | Parameters |Functionality |
 ### <u>How to run:</u>
 
 `go run .`
+
+### Docker
+
+To build the rlf image
+`docker build -t rlf .`
+
+To run the Docker container
+`docker run -p 8080:8080 rlf`
