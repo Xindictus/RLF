@@ -1,105 +1,54 @@
+// @title Swagger Example API
+// @version 1.0
+// @description This is a sample server celler server. \n Developed by Konstantinos Vytiniotis & Katsikavelas Ioannis
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host localhost:8080
+// @BasePath /api/v1
+// @query.collection.format multi
 package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"os"
-	"path/filepath"
-	"strings"
-
-	conf "rlf.com/conf"
+	"test/web-service/controller"
+	"test/web-service/docs"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	conf "rlf.com/conf"
 )
 
-// let's get to hacking your nice path
-const LOG_FILES_PATH = "/home/ioannis/Desktop/"
-
-type detail struct {
-	Detail string `json:"detail"`
-}
-
-// recursively walk through a directory and return the paths to all files whose name matches the given pattern
-func WalkMatch(root, pattern string) ([]string, error) {
-	var matches []string
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-		if info.IsDir() {
-			return nil
-		}
-		if matched, err := filepath.Match(pattern, filepath.Base(path)); err != nil {
-			return err
-		} else if matched {
-			matches = append(matches, path)
-		}
-		return nil
-	})
-	if err != nil {
-		return nil, err
-	}
-	return matches, nil
-}
-
-func searchFile(request_id string, filepath string) bool {
-	// read the whole file at once
-	b, err := ioutil.ReadFile(filepath)
-	if err != nil {
-		panic(err)
-	}
-	s := string(b)
-	// //check whether s contains substring text
-	// fmt.Println(strings.Contains(s, request_id))
-	request_id_exists := strings.Contains(s, request_id)
-	return request_id_exists
-}
-
-func getLogs(c *gin.Context) {
-	// report_type := c.DefaultQuery("reportType", "all") // shortcut for c.Request.URL.Query().Get("reportType")
-	request_id := c.DefaultQuery("requestId", "")
-	// datetime := c.DefaultQuery("datetime", time.Now().String())
-
-	if request_id == "" {
-		detail := detail{
-			Detail: "Request Id is missing, please include a requestId",
-		}
-		c.IndentedJSON(http.StatusBadRequest, detail)
-		return
-	}
-
-	files, err := WalkMatch(LOG_FILES_PATH, "*.txt")
-	if err != nil {
-		fmt.Print(err)
-	}
-
-	for _, item := range files {
-		request_id_exists := searchFile(request_id, item)
-		if request_id_exists {
-			last_element_of_path := filepath.Base(item)
-			c.FileAttachment(item, last_element_of_path)
-		}
-		fmt.Println("Result", item, request_id_exists)
-	}
-
-	// p := params {
-	// 	TypeOfReport: report_type,
-	// 	RequestId: request_id,
-	// 	DateTime: datetime,
-	// }
-	detail := detail{
-		// Detail: "Unfortunatelly no log files found with this specific requestId",
-		Detail: "Unfortunatelly no log files found with this specific requestId: " + request_id,
-	}
-	c.IndentedJSON(http.StatusNotFound, detail)
-}
-
 func main() {
-	router := gin.Default()
+
+	// Programmatically set swagger info
+	docs.SwaggerInfo.Title = "Retrieve LOG File (RLF) API"
+	docs.SwaggerInfo.Description = "This is a basic server for retrieving K8 log files \n Created by: Vytiniotis Konstantinos & Katsikavelas Ioannis"
+	docs.SwaggerInfo.Version = "0.1"
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+
 	ip, port := conf.GetAPIConf()
 
-	router.GET("/logs", getLogs)
+	router := gin.Default()
+	c := controller.NewController()
+
+	v1 := router.Group("/api/v1")
+	{
+		log := v1.Group("/logs")
+		{
+			log.GET(":id", c.GetLogs)
+		}
+	}
+
+	// use ginSwagger middleware to serve the API docs
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	router.Run(fmt.Sprintf("%s:%d", ip, port))
 }
