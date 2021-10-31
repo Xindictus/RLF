@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-all-the-way
+  namespace: default
+  labels:
+    app: go-all-the-way
+spec:
+  template:
+    metadata:
+      name: go-all-the-way
+      labels:
+        app.kubernetes.io/name: go-all-the-way
+    spec:
+      volumes:
+      - name: xxxx
+        nfs:
+          server: xxxx
+          path: /xxxx
+
+      containers:
+      - name: app
+        image: xxxx
+        imagePullPolicy: "IfNotPresent"
+
+        resources:
+          limits:
+            memory: 10Gi
+            cpu: 2
+          requests:
+            memory: 250Mi
+            cpu: 100m
+
+  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: go-all-the-way
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
