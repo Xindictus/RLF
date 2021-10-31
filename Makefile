@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := swagger
-command = "export PATH=$$(go env GOPATH)/bin:$$PATH"
+command = "export PATH=$$PATH:$$(go env GOPATH)/bin"
 
 install_swagger:
 	go get -u github.com/swaggo/swag/cmd/swag
