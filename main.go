@@ -45,6 +45,13 @@ func main() {
 		{
 			log.GET("", c.GetLogs)
 		}
+
+		search := v1.Group("/search")
+		{
+			search.GET("/section/:request_id", c.GetSection)
+			// search.GET("/sections/:request_id", c.GetSections)
+			// search.GET("/text/:request_id", c.GetSections)
+		}
 	}
 
 	// use ginSwagger middleware to serve the API docs

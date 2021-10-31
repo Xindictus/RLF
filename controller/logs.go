@@ -65,7 +65,7 @@ func searchFile(request_id string, filepath string) bool {
 // @Failure 404 {object} httputil.HTTPError
 // @Failure 500 {object} httputil.HTTPError
 // @Router /logs [get]
-func (c *Controller) GetLogs(ctx *gin.Context)  {
+func (c *Controller) GetLogs(ctx *gin.Context) {
 	// report_type := c.DefaultQuery("reportType", "all") // shortcut for c.Request.URL.Query().Get("reportType")
 	request_id := ctx.DefaultQuery("requestId", "")
 	if request_id == "" {
